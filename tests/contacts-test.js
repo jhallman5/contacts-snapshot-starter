@@ -1,7 +1,6 @@
 const chai = require('chai')
 const { expect } = require('chai')
 const chaiHttp = require('chai-http')
-const contacts = require('../server/routes/contacts')
 const { initializeTestDB } = require('./test-utilities')
 
 chai.use(chaiHttp)
@@ -11,67 +10,18 @@ beforeEach( () =>
 )
 
 describe('Contacts', () => {
-  context('/', () => {
-    it('response has status code 200', (done) => {
-      chai.request('http://localhost:3000')
-        .get('/')
-        .end( (error, res) => {
-          expect(res).to.have.status(200)
-          done()
-        })
-    })
-
-    it('response has html', (done) => {
-      chai.request('http://localhost:3000')
-        .get('/')
-        .end( (error, res) => {
-          expect(res).to.be.html
-          done()
-        })
-    })
-
-    it('renders the correct page', (done)  => {
-      chai.request('http://localhost:3000')
-        .get('/')
-        .end( (error, res) => {
-          expect(res.text).contains('<h1>Contacts</h1>')
-          done()
-        })
-    })
-
-    it('response has all contacts', (done) => {
-      chai.request('http://localhost:3000')
-        .get('/')
-        .end( (error, res) => {
-
-          expect(res.text).contains('Jared')
-          expect(res.text).contains('NeEddra')
-          expect(res.text).contains('Tanner')
-          done()
-        })
-    })
-  })
-
   context('/contacts/new', () => {
-    it('renders status code 200', (done)  => {
+    it('response has status code 200/HTML', (done) => {
       chai.request('http://localhost:3000')
-        .get('/new')
+        .get('/contacts/new')
         .end( (error, res) => {
           expect(res).to.have.status(200)
-          done()
-        })
-    })
-
-    it('renders HTML', (done)  => {
-      chai.request('http://localhost:3000')
-        .get('/new')
-        .end( (error, res) => {
           expect(res).to.be.html
           done()
         })
     })
 
-    it('renders the correct page', (done)  => {
+    it('renders the new page', (done)  => {
       chai.request('http://localhost:3000')
         .get('/contacts/new')
         .end( (error, res) => {
@@ -79,8 +29,10 @@ describe('Contacts', () => {
           done()
         })
     })
+  })
 
-    it('post route saves contact data to db with status code 200', (done) => {
+  context('/contacts', () => {
+    it('post route saves contact data to db with status code 200/HTML', (done) => {
       chai.request('http://localhost:3000')
         .post('/contacts')
         .set('content-type', 'application/x-www-form-urlencoded')
@@ -90,17 +42,50 @@ describe('Contacts', () => {
         })
         .end( (error, res) => {
           expect(res).to.have.status(200)
+          expect(res).to.be.html
           done()
         })
     })
+
+    it('returns to the new contact page', (done) => {
+      chai.request('http://localhost:3000')
+        .post('/contacts')
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send({
+          'first_name': 'John',
+          'last_name': 'Hallman'
+        })
+        .end( (error, res) => {
+          expect(res.text).contains('Hallman')
+          done()
+        })
+      })
   })
 
-  context('contacts/:contactId', () => {
-    it('GET /contacts/:contactId gets the correct data', (done) => {
+  context('/contacts/:contactId', () => {
+    it('response has status code 200/HTML', (done) => {
       chai.request('http://localhost:3000')
         .get('/contacts/2')
         .end( (error, res) => {
-          console.log( "=-=-=-> res ID", res.text )
+          expect(res).to.have.status(200)
+          expect(res).to.be.html
+          done()
+        })
+    })
+
+    it('renders show page', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/2')
+        .end( (error, res) => {
+          expect(res.text).contains('<div class="contact-show-page-controls">')
+          done()
+        })
+    })
+
+    it('renders with the correct information', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/2')
+        .end( (error, res) => {
           expect(res.text).contains('Welsh')
           expect(res.text).to.not.contain('Jared')
           expect(res.text).to.not.contain('James')
@@ -108,18 +93,70 @@ describe('Contacts', () => {
         })
     })
   })
-  //
-  // context('contacts/:contactId/delete', () => {
-  //   it('GET route makes sure the correct data is deleted', (done) => {
-  //     chai.request('http://localhost:3000')
-  //       .get('/contacts/2/delete')
-  //       .end( (error, res) => {
-  //         console.log( "=-=-=-> res DELETE", res.text )
-  //         expect(res.text).contains('Welsh')
-  //         expect(res.text).to.not.contain('Jared')
-  //         expect(res.text).to.not.contain('James')
-  //         done()
-  //       })
-  //   })
-  // })
+
+  context('/contacts/:contactId/delete', () => {
+    it('response has status code 200/HTML', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/2/delete')
+        .end( (error, res) => {
+          expect(res).to.have.status(200)
+          expect(res).to.be.html
+          done()
+        })
+    })
+
+    it('renders the contacts page', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/2/delete')
+        .end( (error, res) => {
+          expect(res.text).contains('<div class="contact-list">')
+          done()
+        })
+    })
+
+    it('Deletes the user', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/2/delete')
+        .end( (error, res) => {
+          expect(res.text).contains('Jared')
+          expect(res.text).contains('James')
+          expect(res.text).to.not.contain('Welsh')
+          done()
+        })
+    })
+  })
+
+  context('/search', () => {
+    it('renders the index page', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/search?q=Jared')
+        .end( (error, res) => {
+          expect(res.text).contains('<div class="contact-list">')
+          done()
+        })
+    })
+
+    it('renders with only the searched name', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/search?q=Jared')
+        .end( (error, res) => {
+          expect(res.text).contains('Jared')
+          expect(res.text).to.not.contain('Welsh')
+          expect(res.text).to.not.contain('James')
+          done()
+        })
+    })
+
+    it('renders with mutliple names if applicable', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/contacts/search?q=ja')
+        .end( (error, res) => {
+          expect(res.text).contains('Jared')
+          expect(res.text).contains('James')
+          expect(res.text).to.not.contain('Welsh')
+          done()
+        })
+      })
+    })
+
 })
