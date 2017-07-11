@@ -2,7 +2,6 @@ const pgp = require('pg-promise')()
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/contacts'
 const db = pgp(connectionString)
 
-
 const createContact = function(contact, callback){
   return db.query(`
     INSERT INTO
@@ -66,7 +65,9 @@ const searchForContact = function(searchQuery){
     .catch(error => error);
 }
 
+
 module.exports = {
+  db,
   createContact,
   getContacts,
   getContact,
