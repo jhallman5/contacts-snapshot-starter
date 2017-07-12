@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = require('chai')
 const chaiHttp = require('chai-http')
-const { initializeTestDB } = require('./test-utilities')
+const { initializeTestDB } = require('../test-utilities')
 
 chai.use(chaiHttp)
 
@@ -9,7 +9,7 @@ beforeEach( () =>
   initializeTestDB()
 )
 
-describe('Contacts', () => {
+describe('Contacts End-to-End', () => {
   context('/contacts/new', () => {
     it('response has status code 200/HTML', (done) => {
       chai.request('http://localhost:3000')
