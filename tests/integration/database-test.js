@@ -1,9 +1,13 @@
 const { expect } = require('chai')
-const { initializeTestDB } = require('../test-utilities')
+const { initializeTestDB, truncateTable } = require('../test-utilities')
 const queries = require('../../database')
 
 beforeEach( () =>
   initializeTestDB()
+)
+
+after( () =>
+  truncateTable()
 )
 
 describe('Database Integration', () => {

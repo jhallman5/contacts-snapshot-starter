@@ -1,12 +1,16 @@
 const chai = require('chai')
 const { expect } = require('chai')
 const chaiHttp = require('chai-http')
-const { initializeTestDB } = require('../test-utilities')
+const { initializeTestDB, truncateTable} = require('../test-utilities')
 
 chai.use(chaiHttp)
 
 beforeEach( () =>
   initializeTestDB()
+)
+
+after( () =>
+  truncateTable()
 )
 
 describe('Contacts End-to-End', () => {

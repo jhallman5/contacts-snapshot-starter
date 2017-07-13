@@ -13,5 +13,6 @@ const initializeTestDB = () =>
     .then( () => seedTable() )
 
 module.exports = {
+  truncateTable,
   initializeTestDB
 }
