@@ -4,20 +4,22 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "start:dev": "./node_modules/.bin/nodemon app.js",
+    "start": "NODE_ENV=production node app.js",
+    "start:dev": "NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "db:reset": "dropdb contacts && createdb contacts && npm run load_schema",
     "load_schema": "psql contacts < schema.sql",
     "load_contacts": "psql contacts < contacts.sql",
-    "test": "npm run test:mocha && npm run test:casper",
-    "test:mocha": "./node_modules/.bin/nyc ./node_modules/.bin/mocha tests/**/*-test.js",
-    "test:casper": "./node_modules/.bin/casperjs test tests/UI/*-casper.js"
+    "test": "NODE_ENV=test npm run test:mocha && npm run test:casper",
+    "test:mocha": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/mocha tests/**/*-test.js",
+    "test:casper": "NODE_ENV=test ./node_modules/.bin/casperjs test tests/UI/*-casper.js"
+
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "pg-promise": "^6.2.1"

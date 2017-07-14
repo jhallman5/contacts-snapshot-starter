@@ -1,4 +1,4 @@
-const url = 'http://localhost:3000/contacts/new'
+const url = 'http://localhost:3002/contacts/new'
 
 casper.test.begin('Adds User', function(test) {
   casper.start(url, function() {
@@ -13,7 +13,7 @@ casper.test.begin('Adds User', function(test) {
     }, true)
 })
   casper.then(function(){
-    test.assert(casper.getCurrentUrl() === 'http://localhost:3000/contacts/1', 'redirects to the new User page')
+    test.assert(casper.getCurrentUrl() === 'http://localhost:3002/contacts/1', 'redirects to the new User page')
   })
 
   casper.then(function() {
