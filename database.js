@@ -62,7 +62,9 @@ const searchForContact = function(searchQuery){
     `,
     [`%${searchQuery.toLowerCase().replace(/\s+/,'%')}%`])
     .then(data => data)
-    .catch(error => error);
+    .catch(error => {
+      console.log( "=-=-=-> error 1 ", error  )
+      error});
 }
 
 
