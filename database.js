@@ -1,7 +1,7 @@
 const pgp = require('pg-promise')()
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/contacts'
+const {enviromentConfig} = require('./config')
+const connectionString = process.env.DATABASE_URL || enviromentConfig(process.env.NODE_ENV).DATABASE_URL
 const db = pgp(connectionString)
-
 
 const createContact = function(contact, callback){
   return db.query(`
@@ -63,10 +63,14 @@ const searchForContact = function(searchQuery){
     `,
     [`%${searchQuery.toLowerCase().replace(/\s+/,'%')}%`])
     .then(data => data)
-    .catch(error => error);
+    .catch(error => {
+      console.log( "=-=-=-> error 1 ", error  )
+      error});
 }
 
+
 module.exports = {
+  db,
   createContact,
   getContacts,
   getContact,

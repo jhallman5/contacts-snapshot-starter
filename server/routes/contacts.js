@@ -41,6 +41,7 @@ router.get('/:contactId/delete', (request, response) => {
 
 router.get('/search', (request, response) => {
   const query = request.query.q
+  if(!query || query)
   database.searchForContact(query)
     .then(function(contacts) {
       if (contacts) return response.render('index', { query, contacts })

@@ -1,6 +1,9 @@
 # Contacts Snapshot starter project
 
-1. Create your database: `psql -f schema.sql`
-1. Add data to the database: `psql -f contacts.sql`
-1. Install your dependencies: `npm install`
-1. Run the server: `nodemon`
+  Create your database: `psql -f schema.sql`
+  Add data to the database: `psql -f contacts.sql`
+  Install your dependencies: `npm install`
+  Run the server: `nodemon`
+  Run all tests: `npm test`
+  Run only Mocha Tests: `npm run test:mocha`
+  Run only casper Tests: `npm run test:casper`
